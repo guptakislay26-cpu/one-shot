@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class NotificationsService{private readonly logger=new Logger(NotificationsService.name);list(q:any){this.logger.debug('List notifications');return {feature:'notifications',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

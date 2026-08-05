@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { CrsService } from './crs.service';@Controller('api/crs')export class CrsController{constructor(private service:CrsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

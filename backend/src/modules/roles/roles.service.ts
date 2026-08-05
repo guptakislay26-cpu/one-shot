@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class RolesService{private readonly logger=new Logger(RolesService.name);list(q:any){this.logger.debug('List roles');return {feature:'roles',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

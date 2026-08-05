@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class ShiftHandoverService{private readonly logger=new Logger(ShiftHandoverService.name);list(q:any){this.logger.debug('List shift-handover');return {feature:'shift-handover',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

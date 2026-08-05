@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ShiftHandoverService } from './shift-handover.service';@Controller('api/shift-handover')export class ShiftHandoverController{constructor(private service:ShiftHandoverService){}@Get()list(@Query()q:any){return this.service.list(q);}}

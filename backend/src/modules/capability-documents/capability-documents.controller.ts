@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { CapabilityDocumentsService } from './capability-documents.service';@Controller('api/capability-documents')export class CapabilityDocumentsController{constructor(private service:CapabilityDocumentsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

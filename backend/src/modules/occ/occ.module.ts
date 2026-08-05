@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { OccController } from './occ.controller';import { OccService } from './occ.service';@Module({controllers:[OccController],providers:[OccService]})export class OccModule{}

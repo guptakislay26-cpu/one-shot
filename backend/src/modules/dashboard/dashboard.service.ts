@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class DashboardService{private readonly logger=new Logger(DashboardService.name);list(q:any){this.logger.debug('List dashboard');return {feature:'dashboard',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

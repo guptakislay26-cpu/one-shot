@@ -1,0 +1,1 @@
+import { create } from 'zustand';export const useAuthStore=create<{accessToken?:string;permissions:string[];setToken:(t:string)=>void}>((set)=>({permissions:[],setToken:(accessToken)=>set({accessToken})}));

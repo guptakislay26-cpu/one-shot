@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { MasterDataService } from './master-data.service';@Controller('api/master-data')export class MasterDataController{constructor(private service:MasterDataService){}@Get()list(@Query()q:any){return this.service.list(q);}}

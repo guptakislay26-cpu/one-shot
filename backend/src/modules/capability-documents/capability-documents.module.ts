@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { CapabilityDocumentsController } from './capability-documents.controller';import { CapabilityDocumentsService } from './capability-documents.service';@Module({controllers:[CapabilityDocumentsController],providers:[CapabilityDocumentsService]})export class CapabilityDocumentsModule{}

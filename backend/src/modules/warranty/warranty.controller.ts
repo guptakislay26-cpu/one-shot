@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { WarrantyService } from './warranty.service';@Controller('api/warranty')export class WarrantyController{constructor(private service:WarrantyService){}@Get()list(@Query()q:any){return this.service.list(q);}}

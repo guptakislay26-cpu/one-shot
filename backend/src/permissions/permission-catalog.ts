@@ -1,0 +1,1 @@
+export const PERMISSION_CATALOG=['fleet.read','fleet.write','customers.read','customers.write','work-orders.read','work-orders.write','work-orders.signoff','task-cards.read','task-cards.write','task-cards.signoff','crs.issue','offline-sync.write'] as const; export type PermissionKey=(typeof PERMISSION_CATALOG)[number];

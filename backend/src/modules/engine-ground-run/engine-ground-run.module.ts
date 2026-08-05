@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { EngineGroundRunController } from './engine-ground-run.controller';import { EngineGroundRunService } from './engine-ground-run.service';@Module({controllers:[EngineGroundRunController],providers:[EngineGroundRunService]})export class EngineGroundRunModule{}

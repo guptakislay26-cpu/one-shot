@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { NotificationsService } from './notifications.service';@Controller('api/notifications')export class NotificationsController{constructor(private service:NotificationsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ComplianceService } from './compliance.service';@Controller('api/compliance')export class ComplianceController{constructor(private service:ComplianceService){}@Get()list(@Query()q:any){return this.service.list(q);}}

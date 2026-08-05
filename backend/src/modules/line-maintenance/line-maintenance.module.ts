@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { LineMaintenanceController } from './line-maintenance.controller';import { LineMaintenanceService } from './line-maintenance.service';@Module({controllers:[LineMaintenanceController],providers:[LineMaintenanceService]})export class LineMaintenanceModule{}

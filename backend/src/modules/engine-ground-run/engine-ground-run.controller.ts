@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { EngineGroundRunService } from './engine-ground-run.service';@Controller('api/engine-ground-run')export class EngineGroundRunController{constructor(private service:EngineGroundRunService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { HilDdlController } from './hil-ddl.controller';import { HilDdlService } from './hil-ddl.service';@Module({controllers:[HilDdlController],providers:[HilDdlService]})export class HilDdlModule{}

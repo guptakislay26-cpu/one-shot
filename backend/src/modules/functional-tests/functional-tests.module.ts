@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { FunctionalTestsController } from './functional-tests.controller';import { FunctionalTestsService } from './functional-tests.service';@Module({controllers:[FunctionalTestsController],providers:[FunctionalTestsService]})export class FunctionalTestsModule{}

@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class NonRoutinesService{private readonly logger=new Logger(NonRoutinesService.name);list(q:any){this.logger.debug('List non-routines');return {feature:'non-routines',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

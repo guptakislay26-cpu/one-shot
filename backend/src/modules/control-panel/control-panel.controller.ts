@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ControlPanelService } from './control-panel.service';@Controller('api/control-panel')export class ControlPanelController{constructor(private service:ControlPanelService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class OfflineSyncService{private readonly logger=new Logger(OfflineSyncService.name);list(q:any){this.logger.debug('List offline-sync');return {feature:'offline-sync',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

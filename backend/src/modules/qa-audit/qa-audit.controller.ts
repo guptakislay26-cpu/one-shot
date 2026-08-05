@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { QaAuditService } from './qa-audit.service';@Controller('api/qa-audit')export class QaAuditController{constructor(private service:QaAuditService){}@Get()list(@Query()q:any){return this.service.list(q);}}
