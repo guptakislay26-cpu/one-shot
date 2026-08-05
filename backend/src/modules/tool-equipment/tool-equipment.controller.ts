@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ToolEquipmentService } from './tool-equipment.service';@Controller('api/tool-equipment')export class ToolEquipmentController{constructor(private service:ToolEquipmentService){}@Get()list(@Query()q:any){return this.service.list(q);}}

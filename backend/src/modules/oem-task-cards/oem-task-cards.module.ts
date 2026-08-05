@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { OemTaskCardsController } from './oem-task-cards.controller';import { OemTaskCardsService } from './oem-task-cards.service';@Module({controllers:[OemTaskCardsController],providers:[OemTaskCardsService]})export class OemTaskCardsModule{}

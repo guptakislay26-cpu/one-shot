@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { HilDdlService } from './hil-ddl.service';@Controller('api/hil-ddl')export class HilDdlController{constructor(private service:HilDdlService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { ChargeAccrualsController } from './charge-accruals.controller';import { ChargeAccrualsService } from './charge-accruals.service';@Module({controllers:[ChargeAccrualsController],providers:[ChargeAccrualsService]})export class ChargeAccrualsModule{}

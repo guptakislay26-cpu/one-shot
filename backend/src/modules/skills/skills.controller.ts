@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { SkillsService } from './skills.service';@Controller('api/skills')export class SkillsController{constructor(private service:SkillsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { NonRoutinesService } from './non-routines.service';@Controller('api/non-routines')export class NonRoutinesController{constructor(private service:NonRoutinesService){}@Get()list(@Query()q:any){return this.service.list(q);}}

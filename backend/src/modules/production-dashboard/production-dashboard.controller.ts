@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ProductionDashboardService } from './production-dashboard.service';@Controller('api/production-dashboard')export class ProductionDashboardController{constructor(private service:ProductionDashboardService){}@Get()list(@Query()q:any){return this.service.list(q);}}

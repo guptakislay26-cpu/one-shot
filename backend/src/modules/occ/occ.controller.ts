@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { OccService } from './occ.service';@Controller('api/occ')export class OccController{constructor(private service:OccService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,5 @@
+export type RenderPayload=Record<string,unknown>;export type PdfTemplate={templateCode:string;displayName:string;render(data:RenderPayload):Promise<Buffer>|Buffer};
+export const fieldCatalog={workOrder:['workOrderNumber','title','station.code'],crs:['crsNumber','project.projectNumber','issuedBy']} as const;
+export function resolveDotPath(data:RenderPayload,path:string){return path.split('.').reduce<any>((acc,key)=>acc?.[key],data);}
+export class DeclarativeLayoutRenderer{validateBindings(layout:{bindings:string[]},sample:RenderPayload){return layout.bindings.filter((b)=>resolveDotPath(sample,b)===undefined);}render(layout:{bindings:string[]},sample:RenderPayload){const missing=this.validateBindings(layout,sample);if(missing.length)throw new Error(`Missing PDF bindings: ${missing.join(', ')}`);return Buffer.from(JSON.stringify(sample));}}
+export class TemplateRegistry{private templates=new Map<string,PdfTemplate>();register(t:PdfTemplate){this.templates.set(t.templateCode,t);}resolve(code:string){const t=this.templates.get(code);if(!t)throw new Error(`Unknown PDF template ${code}`);return t;}}

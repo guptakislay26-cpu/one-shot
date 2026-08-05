@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { DomainEventsController } from './domain-events.controller';import { DomainEventsService } from './domain-events.service';@Module({controllers:[DomainEventsController],providers:[DomainEventsService]})export class DomainEventsModule{}

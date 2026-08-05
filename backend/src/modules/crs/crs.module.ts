@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { CrsController } from './crs.controller';import { CrsService } from './crs.service';@Module({controllers:[CrsController],providers:[CrsService]})export class CrsModule{}

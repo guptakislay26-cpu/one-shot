@@ -1,0 +1,2 @@
+import { DeclarativeLayoutRenderer } from './pdf-engine';
+test('all shipped layout bindings resolve against sample data',()=>{const renderer=new DeclarativeLayoutRenderer();const sample={workOrderNumber:'WO-1',title:'Inspect',station:{code:'DXB'},crsNumber:'CRS-1',project:{projectNumber:'P-1'},issuedBy:'cert'};expect(renderer.validateBindings({bindings:['workOrderNumber','title','station.code','crsNumber','project.projectNumber','issuedBy']},sample)).toEqual([]);});

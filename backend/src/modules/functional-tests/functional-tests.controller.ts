@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { FunctionalTestsService } from './functional-tests.service';@Controller('api/functional-tests')export class FunctionalTestsController{constructor(private service:FunctionalTestsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { DomainEventsService } from './domain-events.service';@Controller('api/domain-events')export class DomainEventsController{constructor(private service:DomainEventsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

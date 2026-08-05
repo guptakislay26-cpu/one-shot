@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { InventoryService } from './inventory.service';@Controller('api/inventory')export class InventoryController{constructor(private service:InventoryService){}@Get()list(@Query()q:any){return this.service.list(q);}}

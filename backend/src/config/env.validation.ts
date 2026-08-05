@@ -1,0 +1,4 @@
+import Joi from 'joi';
+const hex64 = Joi.string().hex().length(64);
+export const envValidationSchema = Joi.object({DATABASE_URL:Joi.string().uri().required(),MASTER_DATABASE_URL:Joi.string().uri().default(Joi.ref('DATABASE_URL')),JWT_ACCESS_SECRET:hex64.required(),JWT_REFRESH_SECRET:hex64.required(),PORTAL_JWT_ACCESS_SECRET:hex64.required(),PORTAL_JWT_REFRESH_SECRET:hex64.required(),APP_ENCRYPTION_KEY:hex64.required(),CONTROL_PANEL_API_KEY:Joi.string().min(16).required(),CORS_ORIGINS:Joi.string().required(),REDIS_URL:Joi.string().uri().required(),STORAGE_PROVIDER:Joi.string().valid('local','s3').required(),NODE_ENV:Joi.string().valid('development','test','production').default('development'),MULTITENANCY_ENABLED:Joi.boolean().default(false)});
+export const isMultitenancyEnabled=()=>process.env.MULTITENANCY_ENABLED==='true';

@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class EngineGroundRunService{private readonly logger=new Logger(EngineGroundRunService.name);list(q:any){this.logger.debug('List engine-ground-run');return {feature:'engine-ground-run',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

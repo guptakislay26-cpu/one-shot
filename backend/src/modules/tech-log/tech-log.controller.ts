@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { TechLogService } from './tech-log.service';@Controller('api/tech-log')export class TechLogController{constructor(private service:TechLogService){}@Get()list(@Query()q:any){return this.service.list(q);}}

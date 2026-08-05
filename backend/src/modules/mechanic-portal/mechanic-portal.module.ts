@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { MechanicPortalController } from './mechanic-portal.controller';import { MechanicPortalService } from './mechanic-portal.service';@Module({controllers:[MechanicPortalController],providers:[MechanicPortalService]})export class MechanicPortalModule{}

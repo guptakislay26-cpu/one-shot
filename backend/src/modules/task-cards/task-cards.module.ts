@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { TaskCardsController } from './task-cards.controller';import { TaskCardsService } from './task-cards.service';@Module({controllers:[TaskCardsController],providers:[TaskCardsService]})export class TaskCardsModule{}

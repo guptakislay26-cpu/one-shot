@@ -1,0 +1,1 @@
+import { create } from 'zustand';type Op={operationId:string;type:string;payload:unknown};export const useOfflineQueue=create<{ops:Op[];enqueue:(op:Op)=>void;clear:(id:string)=>void}>((set)=>({ops:[],enqueue:(op)=>set(s=>({ops:[...s.ops,op]})),clear:(id)=>set(s=>({ops:s.ops.filter(o=>o.operationId!==id)}))}));

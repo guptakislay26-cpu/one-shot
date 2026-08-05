@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class DomainEventsService{private readonly logger=new Logger(DomainEventsService.name);list(q:any){this.logger.debug('List domain-events');return {feature:'domain-events',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

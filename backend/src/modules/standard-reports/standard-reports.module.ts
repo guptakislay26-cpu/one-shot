@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { StandardReportsController } from './standard-reports.controller';import { StandardReportsService } from './standard-reports.service';@Module({controllers:[StandardReportsController],providers:[StandardReportsService]})export class StandardReportsModule{}
