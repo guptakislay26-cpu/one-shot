@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class OemTaskCardsService{private readonly logger=new Logger(OemTaskCardsService.name);list(q:any){this.logger.debug('List oem-task-cards');return {feature:'oem-task-cards',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

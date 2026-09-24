@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { OfflineSyncService } from './offline-sync.service';@Controller('api/offline-sync')export class OfflineSyncController{constructor(private service:OfflineSyncService){}@Get()list(@Query()q:any){return this.service.list(q);}}

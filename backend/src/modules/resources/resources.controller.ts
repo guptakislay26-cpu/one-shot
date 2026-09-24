@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ResourcesService } from './resources.service';@Controller('api/resources')export class ResourcesController{constructor(private service:ResourcesService){}@Get()list(@Query()q:any){return this.service.list(q);}}

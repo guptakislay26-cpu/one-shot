@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { UsersService } from './users.service';@Controller('api/users')export class UsersController{constructor(private service:UsersService){}@Get()list(@Query()q:any){return this.service.list(q);}}

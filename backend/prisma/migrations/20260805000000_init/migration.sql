@@ -1,0 +1,74 @@
+CREATE TYPE role_name AS ENUM ('SUPER_ADMIN','STATION_ADMIN','PLANNING_ENGINEER','PEOPLE_MANAGER','CERTIFYING_STAFF','TECHNICIAN','STOREKEEPER','QUALITY_INSPECTOR','FINANCE_OFFICER','VIEWER','CUSTOMER');
+CREATE TYPE project_status AS ENUM ('DRAFT','CONFIRMED','IN_PROGRESS','COMPLETE','INVOICED','CLOSED','ON_HOLD','CANCELLED');
+CREATE TYPE work_order_status AS ENUM ('OPEN','IN_PROGRESS','AWAITING_PARTS','AWAITING_SIGNOFF','SIGNED_OFF','COMPLETED');
+CREATE TYPE task_card_status AS ENUM ('PLANNED','IN_PROGRESS','AWAITING_INSPECTION','SIGNED_OFF','CLOSED','DEFERRED','CANCELLED');
+
+CREATE TABLE stations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), code text NOT NULL UNIQUE, name text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX stations_deleted_at_idx ON stations(deleted_at);
+CREATE TABLE currencies (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), code text NOT NULL UNIQUE, name text NOT NULL, decimal_places integer NOT NULL DEFAULT 2, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE TABLE users (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), email text NOT NULL UNIQUE, password_hash text NOT NULL, role role_name NOT NULL, station_id uuid, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX users_station_deleted_idx ON users(station_id, deleted_at); CREATE INDEX users_role_idx ON users(role);
+CREATE TABLE refresh_tokens (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL, token_hash text NOT NULL, revoked_at timestamptz, expires_at timestamptz NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX refresh_tokens_user_id_idx ON refresh_tokens(user_id);
+CREATE TABLE permissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), key text NOT NULL UNIQUE, description text NOT NULL);
+CREATE TABLE role_permissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), role role_name NOT NULL, permission_key text NOT NULL, UNIQUE(role, permission_key));
+CREATE TABLE user_permissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL, permission_key text NOT NULL, UNIQUE(user_id, permission_key));
+CREATE TABLE custom_roles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), name text NOT NULL, station_id uuid, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX custom_roles_station_deleted_idx ON custom_roles(station_id, deleted_at);
+CREATE TABLE custom_role_permissions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), custom_role_id uuid NOT NULL, permission_key text NOT NULL, UNIQUE(custom_role_id, permission_key));
+CREATE TABLE user_custom_roles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL, custom_role_id uuid NOT NULL, UNIQUE(user_id, custom_role_id));
+CREATE TABLE audit_logs (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid, actor_id text, entity text NOT NULL, entity_id text NOT NULL, action text NOT NULL, payload jsonb, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX audit_logs_station_created_idx ON audit_logs(station_id, created_at);
+CREATE TABLE number_series_definitions (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), code text NOT NULL UNIQUE, prefix text NOT NULL, scope_level text NOT NULL, reset_period text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE number_series_counters (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), definition_code text NOT NULL, station_id uuid, year integer, value integer NOT NULL DEFAULT 0, UNIQUE(definition_code, station_id, year));
+CREATE TABLE pdf_templates (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid, document_type text NOT NULL, template_code text NOT NULL, layout jsonb NOT NULL, active boolean NOT NULL DEFAULT true, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX pdf_templates_station_deleted_idx ON pdf_templates(station_id, deleted_at);
+
+CREATE TABLE customers (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, name text NOT NULL, type text NOT NULL, billing_email text, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX customers_station_deleted_idx ON customers(station_id, deleted_at);
+CREATE TABLE customer_rate_cards (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), customer_id uuid NOT NULL REFERENCES customers(id), currency_code text NOT NULL, valid_from timestamptz NOT NULL, valid_to timestamptz, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX customer_rate_cards_customer_id_idx ON customer_rate_cards(customer_id);
+CREATE TABLE customer_rate_card_segments (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), rate_card_id uuid NOT NULL REFERENCES customer_rate_cards(id), segment_code text NOT NULL, labour_rate numeric(18,2) NOT NULL, material_markup numeric(9,4) NOT NULL);
+CREATE INDEX customer_rate_card_segments_rate_card_id_idx ON customer_rate_card_segments(rate_card_id);
+CREATE TABLE aircraft_types (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, manufacturer text NOT NULL, model text NOT NULL, icao_code text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX aircraft_types_station_deleted_idx ON aircraft_types(station_id, deleted_at);
+CREATE TABLE aircraft (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, customer_id uuid NOT NULL REFERENCES customers(id), aircraft_type_id uuid NOT NULL, registration text NOT NULL UNIQUE, serial_number text NOT NULL, flight_hours numeric(18,2) NOT NULL DEFAULT 0, cycles integer NOT NULL DEFAULT 0, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX aircraft_station_deleted_idx ON aircraft(station_id, deleted_at); CREATE INDEX aircraft_customer_id_idx ON aircraft(customer_id); CREATE INDEX aircraft_aircraft_type_id_idx ON aircraft(aircraft_type_id);
+CREATE TABLE aircraft_configurations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), aircraft_id uuid NOT NULL, name text NOT NULL, effective_from timestamptz NOT NULL, data jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX aircraft_configurations_aircraft_id_idx ON aircraft_configurations(aircraft_id);
+CREATE TABLE fleet_documents (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, aircraft_id uuid NOT NULL, title text NOT NULL, object_key text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX fleet_documents_station_deleted_idx ON fleet_documents(station_id, deleted_at); CREATE INDEX fleet_documents_aircraft_id_idx ON fleet_documents(aircraft_id);
+CREATE TABLE aircraft_maintenance_history (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, aircraft_id uuid NOT NULL, summary text NOT NULL, performed_at timestamptz NOT NULL, flight_hours numeric(18,2) NOT NULL, cycles integer NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX aircraft_maintenance_history_station_deleted_idx ON aircraft_maintenance_history(station_id, deleted_at); CREATE INDEX aircraft_maintenance_history_aircraft_id_idx ON aircraft_maintenance_history(aircraft_id);
+
+CREATE TABLE projects (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, aircraft_id uuid NOT NULL, project_number text NOT NULL UNIQUE, status project_status NOT NULL DEFAULT 'DRAFT', created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX projects_station_deleted_idx ON projects(station_id, deleted_at); CREATE INDEX projects_status_idx ON projects(status);
+CREATE TABLE project_status_history (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), project_id uuid NOT NULL, from_status project_status, to_status project_status NOT NULL, actor_id text NOT NULL, reason text NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX project_status_history_project_id_idx ON project_status_history(project_id);
+CREATE TABLE work_orders (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, project_id uuid NOT NULL, parent_work_order_id uuid, work_order_number text NOT NULL UNIQUE, title text NOT NULL, status work_order_status NOT NULL DEFAULT 'OPEN', signed_off_by text, signed_off_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX work_orders_station_deleted_idx ON work_orders(station_id, deleted_at); CREATE INDEX work_orders_project_id_idx ON work_orders(project_id); CREATE INDEX work_orders_parent_work_order_id_idx ON work_orders(parent_work_order_id); CREATE INDEX work_orders_status_idx ON work_orders(status);
+CREATE TABLE work_order_attachments (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), work_order_id uuid NOT NULL, object_key text NOT NULL, file_name text NOT NULL, content_type text NOT NULL, deleted_at timestamptz, deleted_by text, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX work_order_attachments_work_order_id_idx ON work_order_attachments(work_order_id);
+CREATE TABLE task_card_templates (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, code text NOT NULL, title text NOT NULL, source_type text NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX task_card_templates_station_deleted_idx ON task_card_templates(station_id, deleted_at);
+CREATE TABLE task_card_template_steps (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), template_id uuid NOT NULL REFERENCES task_card_templates(id), sequence integer NOT NULL, instruction text NOT NULL, requires_independent_inspection boolean NOT NULL DEFAULT false);
+CREATE INDEX task_card_template_steps_template_id_idx ON task_card_template_steps(template_id);
+CREATE TABLE task_cards (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, work_order_id uuid NOT NULL, card_number text NOT NULL UNIQUE, title text NOT NULL, status task_card_status NOT NULL DEFAULT 'PLANNED', created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), deleted_at timestamptz, deleted_by text);
+CREATE INDEX task_cards_station_deleted_idx ON task_cards(station_id, deleted_at); CREATE INDEX task_cards_work_order_id_idx ON task_cards(work_order_id); CREATE INDEX task_cards_status_idx ON task_cards(status);
+CREATE TABLE task_steps (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), task_card_id uuid NOT NULL REFERENCES task_cards(id), sequence integer NOT NULL, instruction text NOT NULL, completed_at timestamptz, signed_off_by text, independent_signed_off_by text);
+CREATE INDEX task_steps_task_card_id_idx ON task_steps(task_card_id);
+CREATE TABLE step_signoffs (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), task_step_id uuid NOT NULL, user_id uuid NOT NULL, identity_method text NOT NULL, independent boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(task_step_id, user_id, independent));
+CREATE TABLE task_part_requirements (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), task_card_id uuid NOT NULL REFERENCES task_cards(id), item_id uuid NOT NULL, required_qty numeric(18,4) NOT NULL, issued_qty numeric(18,4) NOT NULL DEFAULT 0);
+CREATE INDEX task_part_requirements_task_card_id_idx ON task_part_requirements(task_card_id);
+CREATE TABLE crs_prerequisites (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), project_id uuid NOT NULL, code text NOT NULL, required boolean NOT NULL DEFAULT true);
+CREATE INDEX crs_prerequisites_project_id_idx ON crs_prerequisites(project_id);
+CREATE TABLE pre_crs_gate_checks (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), project_id uuid NOT NULL, prerequisite_code text NOT NULL, passed boolean NOT NULL, checked_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX pre_crs_gate_checks_project_id_idx ON pre_crs_gate_checks(project_id);
+CREATE TABLE crs_open_items (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), project_id uuid NOT NULL, description text NOT NULL, blocking boolean NOT NULL DEFAULT true, resolved_at timestamptz);
+CREATE INDEX crs_open_items_project_id_idx ON crs_open_items(project_id);
+CREATE TABLE crs_certificates (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), station_id uuid NOT NULL, project_id uuid NOT NULL, crs_number text NOT NULL UNIQUE, issued_by text NOT NULL, issued_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX crs_certificates_station_id_idx ON crs_certificates(station_id);
+
+INSERT INTO permissions(key, description) VALUES
+('fleet.read','Read fleet records'),('fleet.write','Create and update fleet records'),('customers.read','Read customers'),('customers.write','Create and update customers'),('work-orders.read','Read work orders'),('work-orders.write','Create and update work orders'),('work-orders.signoff','Identity-bound work-order signoff'),('task-cards.read','Read task cards'),('task-cards.write','Create and update task cards'),('task-cards.signoff','Identity-bound task-step signoff'),('crs.issue','Issue CRS certificates'),('offline-sync.write','Replay offline sync operations')
+ON CONFLICT (key) DO UPDATE SET description = EXCLUDED.description;

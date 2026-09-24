@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { NonRoutinesController } from './non-routines.controller';import { NonRoutinesService } from './non-routines.service';@Module({controllers:[NonRoutinesController],providers:[NonRoutinesService]})export class NonRoutinesModule{}

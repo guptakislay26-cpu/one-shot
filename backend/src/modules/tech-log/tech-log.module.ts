@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { TechLogController } from './tech-log.controller';import { TechLogService } from './tech-log.service';@Module({controllers:[TechLogController],providers:[TechLogService]})export class TechLogModule{}

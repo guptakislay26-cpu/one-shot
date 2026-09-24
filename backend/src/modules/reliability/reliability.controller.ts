@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { ReliabilityService } from './reliability.service';@Controller('api/reliability')export class ReliabilityController{constructor(private service:ReliabilityService){}@Get()list(@Query()q:any){return this.service.list(q);}}

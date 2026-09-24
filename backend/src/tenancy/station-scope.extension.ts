@@ -1,0 +1,2 @@
+export function scopedWhere(where:any,user:{role:string;stationId?:string}){const base={...(where??{}),deletedAt:null};return user.role==='SUPER_ADMIN'||!user.stationId?base:{...base,stationId:user.stationId};}
+export function applyStationScope(client:any,user:{role:string;stationId?:string}){return client.$extends({query:{$allModels:{async findMany({args,query}:any){args.where=scopedWhere(args.where,user);return query(args);},async findFirst({args,query}:any){args.where=scopedWhere(args.where,user);return query(args);}}}});}

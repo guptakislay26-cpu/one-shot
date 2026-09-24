@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class QaAuditService{private readonly logger=new Logger(QaAuditService.name);list(q:any){this.logger.debug('List qa-audit');return {feature:'qa-audit',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

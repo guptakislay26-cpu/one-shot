@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { HangarService } from './hangar.service';@Controller('api/hangar')export class HangarController{constructor(private service:HangarService){}@Get()list(@Query()q:any){return this.service.list(q);}}

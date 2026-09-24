@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { QaAuditController } from './qa-audit.controller';import { QaAuditService } from './qa-audit.service';@Module({controllers:[QaAuditController],providers:[QaAuditService]})export class QaAuditModule{}

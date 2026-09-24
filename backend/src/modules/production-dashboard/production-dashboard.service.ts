@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class ProductionDashboardService{private readonly logger=new Logger(ProductionDashboardService.name);list(q:any){this.logger.debug('List production-dashboard');return {feature:'production-dashboard',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

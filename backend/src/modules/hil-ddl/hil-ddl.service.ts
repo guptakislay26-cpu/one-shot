@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class HilDdlService{private readonly logger=new Logger(HilDdlService.name);list(q:any){this.logger.debug('List hil-ddl');return {feature:'hil-ddl',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

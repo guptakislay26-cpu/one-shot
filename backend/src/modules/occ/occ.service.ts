@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class OccService{private readonly logger=new Logger(OccService.name);list(q:any){this.logger.debug('List occ');return {feature:'occ',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

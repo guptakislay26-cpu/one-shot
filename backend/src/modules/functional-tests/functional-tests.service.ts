@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class FunctionalTestsService{private readonly logger=new Logger(FunctionalTestsService.name);list(q:any){this.logger.debug('List functional-tests');return {feature:'functional-tests',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

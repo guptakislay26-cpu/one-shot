@@ -1,0 +1,49 @@
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from './auth/roles.guard';
+import { PermissionsGuard } from './auth/permissions.guard';
+import { EncryptionService } from './common/crypto/encryption.service';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { ResponseEnvelopeInterceptor } from './common/interceptors/response-envelope.interceptor';
+import { envValidationSchema } from './config/env.validation';
+import { CustomersModule } from './modules/customers/customers.module';
+import { FleetModule } from './modules/fleet/fleet.module';
+import { TaskCardsModule } from './modules/task-cards/task-cards.module';
+import { WorkOrdersModule } from './modules/work-orders/work-orders.module';
+import { MasterPrismaService } from './tenancy/master/master-prisma.service';
+import { TenantContextService } from './tenancy/tenant-context.service';
+import { TenantMiddleware } from './tenancy/tenant.middleware';
+import { TenantPrismaService } from './tenancy/tenant-prisma.service';
+import { TenantResolverService } from './tenancy/tenant-resolver.service';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, validationSchema: envValidationSchema }),
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
+    FleetModule,
+    CustomersModule,
+    WorkOrdersModule,
+    TaskCardsModule,
+  ],
+  providers: [
+    EncryptionService,
+    MasterPrismaService,
+    TenantContextService,
+    TenantPrismaService,
+    TenantResolverService,
+    { provide: APP_FILTER, useClass: GlobalExceptionFilter },
+    { provide: APP_INTERCEPTOR, useClass: ResponseEnvelopeInterceptor },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: PermissionsGuard },
+  ],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(TenantMiddleware).forRoutes('*');
+  }
+}

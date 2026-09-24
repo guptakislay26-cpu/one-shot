@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class ComplianceService{private readonly logger=new Logger(ComplianceService.name);list(q:any){this.logger.debug('List compliance');return {feature:'compliance',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

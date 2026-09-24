@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { ToolEquipmentController } from './tool-equipment.controller';import { ToolEquipmentService } from './tool-equipment.service';@Module({controllers:[ToolEquipmentController],providers:[ToolEquipmentService]})export class ToolEquipmentModule{}

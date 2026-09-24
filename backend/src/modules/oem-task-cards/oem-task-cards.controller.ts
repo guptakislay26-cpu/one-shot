@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { OemTaskCardsService } from './oem-task-cards.service';@Controller('api/oem-task-cards')export class OemTaskCardsController{constructor(private service:OemTaskCardsService){}@Get()list(@Query()q:any){return this.service.list(q);}}

@@ -1,0 +1,1 @@
+import { Controller, Get, Query } from '@nestjs/common';import { WorkPackagesService } from './work-packages.service';@Controller('api/work-packages')export class WorkPackagesController{constructor(private service:WorkPackagesService){}@Get()list(@Query()q:any){return this.service.list(q);}}

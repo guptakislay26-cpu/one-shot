@@ -1,0 +1,1 @@
+import { Module } from '@nestjs/common';import { ProductionDashboardController } from './production-dashboard.controller';import { ProductionDashboardService } from './production-dashboard.service';@Module({controllers:[ProductionDashboardController],providers:[ProductionDashboardService]})export class ProductionDashboardModule{}

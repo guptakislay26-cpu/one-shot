@@ -1,0 +1,1 @@
+import { Link, Outlet } from 'react-router';export function AppShell(){return <main><nav><Link to="/fleet">Fleet</Link> <Link to="/customers">Customers</Link> <Link to="/work-orders">Work Orders</Link> <Link to="/task-cards">Task Cards</Link></nav><Outlet/></main>}

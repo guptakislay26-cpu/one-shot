@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class ControlPanelService{private readonly logger=new Logger(ControlPanelService.name);list(q:any){this.logger.debug('List control-panel');return {feature:'control-panel',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}

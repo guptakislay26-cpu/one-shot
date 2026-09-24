@@ -1,0 +1,1 @@
+import { Injectable, Logger } from '@nestjs/common';@Injectable()export class MechanicPortalService{private readonly logger=new Logger(MechanicPortalService.name);list(q:any){this.logger.debug('List mechanic-portal');return {feature:'mechanic-portal',items:[],page:q?.page??1,pageSize:Math.min(q?.pageSize??25,100)};}}
