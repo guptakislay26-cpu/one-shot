@@ -1,2 +1,2 @@
--- Initial FlyPal MRO tenant schema. Generated from prisma/schema.prisma.
+-- Initial LAIO SaaS tenant schema. Generated from prisma/schema.prisma.
 -- Apply with prisma migrate deploy; Prisma owns the canonical model definitions.

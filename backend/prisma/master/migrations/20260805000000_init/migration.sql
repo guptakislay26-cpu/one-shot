@@ -1,1 +1,1 @@
--- Initial FlyPal MRO master tenant registry schema. Generated from prisma/master/schema.prisma.
+-- Initial LAIO SaaS master tenant registry schema. Generated from prisma/master/schema.prisma.

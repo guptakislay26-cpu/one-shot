@@ -1,2 +1,2 @@
-import { useQuery } from '@tanstack/react-query';import { api } from '../../lib/api';
-export default function ListPage(){const {data}=useQuery({queryKey:['work-orders'],queryFn:async()=> (await api.get('/work-orders')).data.data});return <section><h1>work orders</h1><pre>{JSON.stringify(data,null,2)}</pre></section>}
+import { useQuery } from '@tanstack/react-query';import { useEffect } from 'react';import { api } from '../../lib/api';
+export default function ListPage(){const {data}=useQuery({queryKey:['projects'],queryFn:async()=> (await api.get('/projects')).data.data});useEffect(()=>{document.title='Projects | LAIO SaaS';},[]);return <section aria-labelledby="page-title"><h1 id="page-title">Projects</h1><pre>{JSON.stringify(data,null,2)}</pre></section>}

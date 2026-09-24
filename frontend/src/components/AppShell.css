@@ -1,0 +1,95 @@
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid #d9dde5;
+  padding: 1.5rem 1rem;
+}
+
+.brand {
+  color: #172554;
+  display: inline-block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+}
+
+.sidebar__links,
+.mobile-navigation__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar__links li + li,
+.mobile-navigation__links li + li {
+  margin-top: 0.25rem;
+}
+
+.navigation-link {
+  border-radius: 0.375rem;
+  color: #334155;
+  display: block;
+  padding: 0.625rem 0.75rem;
+  text-decoration: none;
+}
+
+.navigation-link:hover,
+.navigation-link:focus-visible {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.navigation-link--active {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.app-content {
+  padding: 2rem;
+}
+
+.mobile-navigation {
+  align-items: center;
+  border-bottom: 1px solid #d9dde5;
+  display: none;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.mobile-navigation .brand {
+  margin: 0;
+}
+
+.mobile-navigation details {
+  position: relative;
+}
+
+.mobile-navigation summary {
+  cursor: pointer;
+}
+
+.mobile-navigation nav {
+  background: white;
+  border: 1px solid #d9dde5;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1rem rgb(15 23 42 / 15%);
+  min-width: 12rem;
+  padding: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  z-index: 1;
+}
+
+@media (max-width: 48rem) {
+  .app-shell { display: block; }
+  .sidebar { display: none; }
+  .mobile-navigation { display: flex; }
+  .app-content { padding: 1.25rem; }
+}
