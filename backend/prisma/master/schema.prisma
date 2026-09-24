@@ -1,4 +1,4 @@
-generator client { provider = "prisma-client-js" output = "../node_modules/@flypal/master-client" }
+generator client { provider = "prisma-client-js" output = "../../node_modules/@flypal/master-client" }
 datasource db { provider = "postgresql" url = env("MASTER_DATABASE_URL") }
 enum TenantStatus { ACTIVE SUSPENDED DISABLED DELETED }
 model Tenant { id String @id @default(uuid()) @db.Uuid slug String @unique name String status TenantStatus @default(ACTIVE) dbHost String @map("db_host") dbName String @map("db_name") dbUser String @map("db_user") dbPassword String @map("db_password") createdAt DateTime @default(now()) @map("created_at") updatedAt DateTime @updatedAt @map("updated_at") sessions ActiveSession[] backups TenantBackup[] logs TenantAuditLog[] @@map("tenants") }
